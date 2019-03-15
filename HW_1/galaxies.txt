@@ -1,0 +1,9 @@
+Problem 2 
+Part A 
+The lagest recession velocity is: 78736
+The smallest recession velocity is: 3734
+Part B 
+The recession velocities of the brightest galaxies is: 54610
+The recession velocities of the faintest galaxies is: 3734
+Part C 
+在（B）中得到的结果通过除以哈勃常数得到的结果过小，不符合天文观测的基本长度单位。
