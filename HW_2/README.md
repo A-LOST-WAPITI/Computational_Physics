@@ -1,121 +1,177 @@
-# 计算物理的第二次作业
+---
+html:
+    embed_local_images: true
+    offline: true
+    toc: true
+---
+# 计算物理的第二次作业 {ignore=true}
 
-> 万国麟
-> 2017141221045
+>万国麟
+>2017141221045
+
+
+<!-- @import "[TOC]" {cmd="toc" depthFrom=1 depthTo=6 orderedList=false} -->
+
+<!-- code_chunk_output -->
+
+* [Problem 1](#problem-1)
+	* [Code](#code)
+	* [结果](#结果)
+* [Problem 2](#problem-2)
+	* [Code](#code-1)
+	* [结果](#结果-1)
+* [分析](#分析)
+
+<!-- /code_chunk_output -->
 
 ## Problem 1
 ### Code
-
-```python
-import time
-#计时开始时间点
-start=time.time()
-#得到每一项的函数
-def ser(index):
-    if index%2==0:
-        flag=-1
-    else:
-        flag=1
-    return flag/(2*index-1)
-#计算
-numSum=0    #和置零
-for index in range(1,5*10**5+1):
-    base=ser(index) #得到第index项
-    numSum+=base    #累加
-pi=round(4*numSum,10)   #Python默认精度为17位，此处取10位
-print(pi)
-#计时结束时间点
-end=time.time()
-print("Total time cost is",end-start)
+代码如下，保存在`Problem_1.c`中
+```c
+#include "stdio.h"
+#include "math.h"
+#include "time.h"
+//用于计时的模块
+double getTime(time_t stage1,time_t stage2){
+    return (double)(stage2-stage1)/CLOCKS_PER_SEC;
+}
+//计算求和项的函数
+float ser(index){
+    return 1.0/(2*index-1);
+}
+//正向求和函数
+float posSum(){
+    float Sum=0;
+    for(size_t i=1;i<=5*(int)pow(10,8);i++) //用5*10**8来进行次数判断
+    {
+        if (i%2==0) {
+            Sum-=ser(i);
+        }
+        else
+        {
+            Sum+=ser(i);
+        }   
+    }
+    return Sum;
+}
+//逆向求和函数
+float resSum(){
+    float Sum=0;
+    for(size_t i=5*(int)pow(10,8);i>0;i--)  //用5*10**8来进行次数判断
+    {
+        if (i%2==0) {
+            Sum-=ser(i);
+        }
+        else
+        {
+            Sum+=ser(i);
+        }   
+    }
+    return Sum;
+}
+//主函数
+void main(){
+    time_t start=clock();
+    float posResult,resResult;
+    posResult=4*posSum();
+    printf("正向求和结果为：%.10f \n",posResult);
+    time_t stage1=clock();
+    resResult=4*resSum();
+    printf("逆向求和结果为：%.10f \n",resResult);
+    time_t stage2=clock();
+    printf("第一段的时间为：%f\n",getTime(start,stage1));
+    printf("第二段的时间为：%f\n",getTime(stage1,stage2));
+    printf("总时间消耗为：%f\n",getTime(start,stage2));
+}
 ```
-
 ### 结果
-运行以上代码所得结果为：
-
-> 3.1415906536
-> Total time cost is 0.17086386680603027
+输出结果如下
+>正向求和结果为：3.1415967941 
+>逆向求和结果为：3.1415925026 
+>第一段的时间为：1.704763
+>第二段的时间为：1.680130
+>总时间消耗为：3.384893
 
 ## Problem 2
 ### Code
-
-```python
-import time
-from decimal import getcontext,Decimal
-#计时开始时间点
-start=time.time()
-#精度设置（此处设置为总位数，为使精确到小数点后100位应设为101
-getcontext().prec=101
-#用于arctan计算的精确值
-par1=Decimal(1)/Decimal(5)
-par2=Decimal(1)/Decimal(239)
-#得到arctan每一项与求和每一项的函数
-def arctanSer(num,index):
-    if index%2==0:  #正负判断
-        flag=-1
-    else:
-        flag=1
-    return flag*num**(2*index-1)/(2*index-1)
-def getBase(index):
-    global par1,par2
-    base=4*arctanSer(par1,index)-arctanSer(par2,index)
-    return base
-#计算
-index=1
-numSum=Decimal(0)
-base=getBase(index)
-while abs(base)>10**(-100): #确保后续项对求和的影响小于小数点后100位
-    numSum+=base
-    index+=1
-    base=getBase(index)
-pi=4*numSum
-print(pi)
-#计时结束时间点
-end=time.time()
-print("Total time cost is",end-start)
+代码如下，保存在`Problem_2.c`中，编译时**必须加上`-lquadmath`参数**
+```c
+#include "quadmath.h"
+#include "stdio.h"
+#include "time.h"
+//用于计时的模块
+double getTime(time_t stage1,time_t stage2){
+    return (double)(stage2-stage1)/CLOCKS_PER_SEC;
+}
+//得到arctan的一项
+__float128 arctanSer(__float128 num,int index) {
+    int flag;
+    if (index%2==0) {
+        flag=-1;
+    }
+    else {
+        flag=1;
+    }
+    return flag*powq(num,2*index-1)/(2*index-1);
+}
+//得到求和项的函数
+__float128 getBase(int index) {
+    __float128 f_1,f_5,f_239,par1,par2;
+    f_1=1.0Q;
+    f_5=5.0Q;
+    f_239=239.0Q;
+    par1=f_1/f_5;
+    par2=f_1/f_239;
+    return 4*arctanSer(par1,index)-arctanSer(par2,index);
+}
+//主函数
+void main() {
+    time_t start=clock();
+    int index=1;
+    char piStr[102];
+    __float128 base,numSum=0.0Q,pi;
+    base=getBase(index);
+    while (fabsq(base)>powq(10,-100)) { //使用精度作为退出条件
+        numSum+=base;
+        index++;
+        base=getBase(index);
+    }
+    pi=4*numSum;
+    quadmath_snprintf(piStr,sizeof piStr,"%*.100Qe",pi);
+    printf("所得Pi值为：\n%s \n",piStr);
+    time_t end=clock();
+    printf("总时间消耗为：%f \n",getTime(start,end));
+}
 ```
-
 ### 结果
-运行以上代码所得结果为：
-
->3.1415926535897932384626433832795028841971693993751058209749445923078164062862089986280348253421170677
->Total time cost is 0.0011625289916992188
+输出结果如下
+>所得Pi值为：
+>3.141592653589793238462643383279502412293079220690124961808915814888833011042645892985092359595000743 
+>总时间消耗为：0.001331
 
 ## 分析
-Problem 1中使用Gregory-Leibniz方法来计算$\pi$的近似值时，对于所求精度为小数点后10位时产生的大规模误差即出现在了小数点后6位。该误差原因应该在于退出条件`index<5*10**5`有关，当退出时后续一项对整体和的影响仍为小数点后第6位。
-尝试过将退出条件更换为`index<5*10**10`或`abs(base)<10**(-10)`等可以将求和精确到小数点后10位的条件，但计算时间过长只能作罢，在这一过程也体现出Problem 1中提出的算法收敛速度较慢。
-Program 2中使用Machin’s formula来进行$\pi$的近似值的计算时，可以将精度调节至很高同时保留足够快的收敛速度，两次计算的计时中，在给定相同的硬件环境（单核CPU，2G内存）下得到的更高精度的结果而使用的时间则不足前者的百分之一。
-对于Problem 2中得到的结果进行验证：
+在Problem 1中，对于C语言的`float`类型数据而言，由于在机器中的浮点数是通过二进制来离散表示的，而`float`在计算机中的表示形式如下图
+![float](image/20140619160253156.png)
+其中：
+* sign部分为符号位（1bit）
+* exponent部分为幂次位（8bit）
+* fraction部分为小数部分（23bit）
 
-> 所得$\pi$值：
->3.1415926535897932384626433832795028841971693993751058209749445923078164062862089986280348253421170677
-> 标准$\pi$值:
->3.141592653589793238462643383279502884197169399375105820974944592307816406286208998628034825342117068
+由此可见，对于一个`float`类型的数据而言，其能表示的最小的十进制数为$2^{-23}=0.00000011920928955078125$，对于比这一间隔更小的数则无能为力。可见对于单精度的数据，其最小的“分辨率”即为$10^{-7}$。考虑到其表示方式，则可以得到`float`真正的精确的位数为**从左侧第一个非零位开始至第七位**。[^1]
+同理对于`__float128`类型的数据，精确地位数为从**左侧第一个非零位开始至第三十四位**，因其数据结构表示如下图。
+![__float128](image/800px-IEEE_754_Quadruple_Floating_Point_Format.svg.png)
+这与Problem 1、Problem 2中计算所得的$\pi$值与标准值相比产生误差的位数也是一致的。
+>Problem 1（取逆向求和的结果）：
+>3.141592**5**026
+>//第八位开始误差
+>Problem 2：
+>3.141592653589793238462643383279502**4**12293079220690124961808915814888833011042645892985092359595000743
+>//第三十五位开始误差
+>标准值：
+>3.1415926535897932384626433832795028841971693993751058209749445923078164062862089986280348253421170679
+>//以上结果中**加粗数字**为出现错误的位置
 
-由上可知，在Problem 2中我们所得的$\pi$值已经与标准值在小数点后100位无差。
-而如果dicemal接收值为Python默认的`float`类型（精确17位），即虽设置精确位数为小数点后100位但所使用的源数据精确度不足，所得结果在小数点后16位即开始偏差。
-如将Problem 2代码中第8-20行更改为如下：
+而分析在Problem 1中正向求和与逆向求和结果不同的问题。如果求和顺序为从大加到小（即上文所说的正向求和）时，由于大数的浮点位数要高，初期大数求和所得数字的与最终所加小数的浮点位数差值更大，其与小数求和时将较小数字尾舍弃较多导致最后求和的误差较大；而如果求和顺序为从小加到大，初期小数的浮点位接近所以求和过程产生的误差较小，而经过小数求和所得和的浮点位数与最终的大数浮点位数也会相近，进而进一步减小了对于数字舍弃产生的误差。[^2]
 
-```python
-par1=1/5
-par2=1/239
-#得到arctan每一项与求和每一项的函数
-def arctanSer(num,index):
-    if index%2==0:
-        flag=-1
-    else:
-        flag=1
-    return flag*num**(2*index-1)/(2*index-1)
-def getBase(index):
-    global par1,par2
-    par1=Decimal(par1)
-    par2=Decimal(par2)
-    base=4*arctanSer(par1,index)-arctanSer(par2,index)
-    return base
-```
-
-得到的结果则为：
-
->3.141592653589793**4**107032954041479970148981482500287393927465713696851877837164053060655790051392213568
->Total time cost is 0.001378774642944336
-
-可见所得结果在**4**处即已经开始出现较大的偏差。
+[^1]:https://blog.csdn.net/dreamer2020/article/details/24158303
+[^2]:https://akaedu.github.io/book/ch14s04.html

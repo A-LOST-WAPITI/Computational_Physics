@@ -23,6 +23,7 @@ index=1
 numSum=Decimal(0)
 base=getBase(index)
 while abs(base)>10**(-100): #确保后续项对求和的影响小于小数点后100位
+    print(base)
     numSum+=base
     index+=1
     base=getBase(index)
