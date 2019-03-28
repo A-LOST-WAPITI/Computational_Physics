@@ -6,4 +6,4 @@ Part B
 The recession velocities of the brightest galaxies is: 54610
 The recession velocities of the faintest galaxies is: 3734
 Part C 
-在（B）中得到的结果通过除以哈勃常数得到的结果过小，不符合天文观测的基本长度单位。
+由退行速度我们可知较远的星体的亮度却是所得数据中最大亮度，可以得出是否列入调查是由亮度决定的结论。这一结论与Part B所得与数据吻合。

@@ -4,7 +4,7 @@ html:
     offline: true
     toc: true
 ---
-# 计算物理第一次作业
+# 计算物理第一次作业 {ignore=true}
 >万国麟
 2017141221045
 
@@ -13,12 +13,13 @@ html:
 
 <!-- code_chunk_output -->
 
-* [计算物理第一次作业](#计算物理第一次作业)
-	* [Problem 1](#problem-1)
-	* [Problem 2](#problem-2)
-		* [使用shell脚本](#使用shell脚本)
-		* [使用Python](#使用python)
-		* [结果](#结果)
+* [Problem 1](#problem-1)
+* [Problem 2](#problem-2)
+	* [使用shell脚本](#使用shell脚本)
+		* [使用sort的做法](#使用sort的做法)
+		* [造轮子的做法](#造轮子的做法)
+	* [使用Python](#使用python)
+	* [结果](#结果)
 
 <!-- /code_chunk_output -->
 
@@ -46,7 +47,34 @@ nano ./exper.txt
 ```
 ## Problem 2
 ### 使用shell脚本
+#### 使用sort的做法
+代码如下
+```shell
+#!/usr/bin/env bash
+
+filePath="./lcrs.txt"
+
+rawStr=$(cat $filePath | xargs) #读入文件并去除换行符
+str=${rawStr##*#}   #刨除“#”符号的影响
+echo -e $str > temp.txt
+sed -i 's/ /\n/g' temp.txt
+awk 'ORS=NR%4?" ":"\n"{print}' temp.txt > temp1.txt
+minCZList=($(sort -n -k 1 < temp1.txt | head -1))
+maxCZList=($(sort -n -k 1 < temp1.txt | tail -1))
+minAMList=($(sort -n -k 4 < temp1.txt | tail -1))
+maxAMList=($(sort -n -k 4 < temp1.txt | head -1))
+rm -f ./temp* ./sort
+minCZ=${minCZList[0]}
+maxCZ=${maxCZList[0]}
+minAM=${minAMList[0]}
+maxAM=${maxAMList[0]}
+echo "${minCZ},${maxCZ},${minAM},${maxAM}"
+```
+该脚本仅写为输出所需数值，并未完成输出到文件的工作。保存为`HW_1_adv.sh`。
+（使用sort的速度较之前的方法有明显的提升。）
+#### 造轮子的做法
 因为发现使用过程中需要对元素索引进行操作，所以采用脚本而不是单独的指令来完成。
+（而且当时刚写时没有想到使用sort来排序，所以程序极其复杂而且效率低下，应该是查找最大值的算法对计算速度产生了较大的影响）
 脚本具体内容如下:
 ```bash
 #!/usr/bin/env bash
@@ -172,5 +200,5 @@ Part B
 The recession velocities of the brightest galaxies is: 54610
 The recession velocities of the faintest galaxies is: 3734
 Part C 
-在（B）中得到的结果通过除以哈勃常数得到的结果过小，不符合天文观测的基本长度单位。
+由退行速度我们可知较远的星体的亮度却是所得数据中最大亮度，可以得出是否列入调查是由亮度决定的结论。这一结论与Part B所得与数据吻合。
 ```
