@@ -14,7 +14,7 @@ for line in strLists:
 X=numArray[:,0]
 result=numArray[:,1]
 plt.figure()
-plt.title("The result of Horner's Law")
+plt.title("The result of Horner's Method")
 plt.plot(X,result,"-",label="result")
 plt.legend()
 plt.show()
