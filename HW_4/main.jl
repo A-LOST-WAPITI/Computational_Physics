@@ -1,15 +1,16 @@
-include("/home/wapiti/on-the-fly/Computational_Physics/HW_4/getResult.jl")
-include("/home/wapiti/on-the-fly/Computational_Physics/HW_4/image.jl")
+include(joinpath(@__DIR__,"getResult.jl"))
+include(joinpath(@__DIR__,"image.jl"))
 
 function main()
-    N::UInt32=20000
+    N::UInt32=10000
     maxIndex::UInt8=30
     CUDA::Bool=true
+    times::Bool=false
 
-    result=produce(N,maxIndex,CUDA)
-    color_image(result)
+    result=produce(N,maxIndex,CUDA,times)
+    color_image(result,times,maxIndex)
 
-    println("Everything is done. Have fun!\n")
+    println("Everything is done. Have fun!")
 end
 
 @time main()
