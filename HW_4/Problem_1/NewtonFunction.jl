@@ -1,5 +1,5 @@
-f(x)=x^3-1
-d_f(x)=3x^2
+f(x::ComplexF32)=x^3-1
+d_f(x::ComplexF32)=3x^2
 function Newton(z0::ComplexF32,maxIndex::UInt8,times::Bool)
     z=z0
     here1::ComplexF32=1+0im
