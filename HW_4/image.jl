@@ -1,4 +1,4 @@
-using Colors,FileIO,ImageView
+using Colors,FileIO
 
 function color_image(result::Array{UInt8},times::Bool,maxIndex::UInt8)
     times && (cmap=colormap("RdBu",maxIndex+1);true) || (cmap=colormap("RdBu",4);true)
