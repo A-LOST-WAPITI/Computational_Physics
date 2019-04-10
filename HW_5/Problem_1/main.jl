@@ -34,4 +34,4 @@ function Find(func::Function)
     (x[1]+x[3])/2
 end
 
-Find(g)
+Find(f)
