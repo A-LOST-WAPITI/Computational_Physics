@@ -8,7 +8,7 @@ function Change(x::Array{Float64},new::Float64)
     end
     sort(x)
 end
-function Step(x::Array{Float64},func::Function,h::Float64)
+function Step(x::Array{Float64},func::Function,h::Float64,start::Float64=0.0)
     q::Float64=func(x[1])/func(x[2])
     r::Float64=func(x[3])/func(x[2])
     s::Float64=func(x[3])/func(x[1])
@@ -16,15 +16,15 @@ function Step(x::Array{Float64},func::Function,h::Float64)
     upper::Float64=r*(r-q)*(x[3]-x[2])+(1-r)*s*(x[3]-x[1])
     lower::Float64=(q-1)*(r-1)*(s-1)
     new=x[3]-upper/lower
-    new>h && (new=h;true)
-    new<0 && (new=0;true)
+    new>start+h && (new=start+h;true)
+    new<start && (new=start;true)
     Change(x,new)
 end
-function Find(func::Function,h::Float64,tolerance::Float64,maxIndex::UInt32)
-    x=Array{Float64}([tolerance,h/2,h-tolerance])
+function Find(func::Function,h::Float64,tolerance::Float64,maxIndex::UInt32,start::Float64=0.0)
+    x=Array{Float64}([start+tolerance,start+h/2,start+h-tolerance])
     count::UInt16=0
     while abs(x[3]-x[1])>=2tolerance && count<maxIndex && x[2]!=x[3] && x[1]!=x[2]
-        Step(x,func,h)
+        Step(x,func,h,start)
     end
     (x[1]+x[3])/2
 end

@@ -13,7 +13,7 @@ function main()
     y.=P.(x)
 
     gr()
-    plot(x,y,label="Polynomial")
+    plot(x,y,label="Polynomial",xticks=0:0.1:1)
     png(joinpath(@__DIR__,"result.png"))
 end
 

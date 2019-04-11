@@ -1,4 +1,4 @@
-include(joinpath(@__DIR__,"Brent.jl"))
+include("Brent.jl")
 
 function BalanceFunc(r::Float64)
     G::Float64=6.674e-11

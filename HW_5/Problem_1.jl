@@ -1,4 +1,4 @@
-include(joinpath(@__DIR__,"Brent.jl"))
+include("Brent.jl")
 
 function main()
     h::Float64=0.5
