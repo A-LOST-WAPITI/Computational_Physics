@@ -1,5 +1,5 @@
-include(joinpath(@__DIR__,"getResult.jl"))
-include(joinpath(@__DIR__,"image.jl"))
+include("getResult.jl")
+include("image.jl")
 
 function main()
     N::UInt32=10000

@@ -1,7 +1,7 @@
 using GPUArrays
 using CuArrays:CuArray
 
-include(joinpath(@__DIR__,"NewtonFunction.jl"))
+include("NewtonFunction.jl")
 
 function produce(N::UInt32,maxIndex::UInt8,CUDA::Bool,times::Bool)
     dots=[ComplexF32(i,j) for i=LinRange(-2,2,N),j=LinRange(2,-2,N)]

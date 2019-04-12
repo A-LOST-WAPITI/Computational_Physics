@@ -6,8 +6,7 @@ function P(x::Float64)
     result::Float64=sum(X.*par)
     return result
 end
-function main()
-    starts::Array{Float64}=[0,0.1,0.3,0.6,0.8,0.9]
+function main(starts::Array{Float64}=[0,0.1,0.3,0.6,0.8,0.9])
     h::Float64=0.1
     maxIndex::UInt32=50
     tolerance::Float64=10^(-8)

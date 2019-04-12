@@ -33,6 +33,8 @@ html:
 			- [Code](#code-4 )
 			- [结果及分析](#%E7%BB%93%E6%9E%9C%E5%8F%8A%E5%88%86%E6%9E%90-3 )
 		- [Part C](#part-c )
+			- [Code](#code-5 )
+			- [结果及分析](#%E7%BB%93%E6%9E%9C%E5%8F%8A%E5%88%86%E6%9E%90-4 )
   
   
   
@@ -201,8 +203,7 @@ function P(x::Float64)
     result::Float64=sum(X.*par)
     return result
 end
-function main()
-    starts::Array{Float64}=[0,0.1,0.3,0.6,0.8,0.9]
+function main(starts::Array{Float64}=[0,0.1,0.3,0.6,0.8,0.9])
     h::Float64=0.1
     maxIndex::UInt32=50
     tolerance::Float64=10^(-8)
@@ -231,5 +232,40 @@ end
   
 ### Part C
   
-暂时还没有写，因为感觉没有poles呀，所以没有用乘新函数方法的必要？
+#### Code
+  
+代码如下
+```julia
+include("FindingRoots.jl")
+  
+function GetStarts(func::Function)
+    gap::Float64=0.01
+    starts=zeros(Float64,6)
+    flag::Int8=sign(func(0.0))
+    here::Float64=0.0
+    count::UInt8=1
+    while count<=6
+        temp::Float64=func(here+gap)
+        flag!=sign(temp) && (starts[count]=here;true) && (flag=sign(temp);true) && (count+=1;true)
+        here+=gap
+    end
+    return starts
+end
+  
+main(GetStarts(P))
+```  
+#### 结果及分析
+  
+结果如下
+```
+  0.164669 seconds (490.05 k allocations: 25.131 MiB, 2.70% gc time)
+6-element Array{Float64,1}:
+ 0.03376524289842399
+ 0.16939530676686765
+ 0.38069040687784345
+ 0.6193095930415956 
+ 0.8306046932331417 
+ 0.9662347571015799
+```
+可以看出在未实现通过绘图确定根大概范围的情况下仍然可以得出精确的解
   
