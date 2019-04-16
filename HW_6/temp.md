@@ -4,10 +4,30 @@ html:
     offline: true
     toc: true
 ---
-# 计算物理第五次作业
+# 计算物理第六次作业
 
 > 万国麟
 > 2017141221045
+
+<!-- @import "[TOC]" {cmd="toc" depthFrom=1 depthTo=6 orderedList=false} -->
+
+<!-- code_chunk_output -->
+
+* [计算物理第六次作业](#计算物理第六次作业)
+	* [拉格朗日插值法](#拉格朗日插值法)
+		* [Code](#code)
+		* [分析](#分析)
+	* [Problem 1](#problem-1)
+		* [Code](#code-1)
+		* [结果及分析](#结果及分析)
+	* [Problem 2](#problem-2)
+		* [Code](#code-2)
+		* [结果及分析](#结果及分析-1)
+	* [Problem 3](#problem-3)
+		* [Code](#code-3)
+		* [结果及分析](#结果及分析-2)
+
+<!-- /code_chunk_output -->
 
 ## 拉格朗日插值法
 ### Code
