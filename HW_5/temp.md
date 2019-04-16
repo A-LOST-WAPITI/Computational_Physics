@@ -49,11 +49,16 @@ html:
 ### 结果及分析
 程序运行结果如下（其中计时部分已经多次计时刨除编译所需时间）
 ```
-  0.065786 seconds (180.31 k allocations: 9.475 MiB, 6.62% gc time)
 0.45018361129449697
+  0.090180 seconds (229.23 k allocations: 11.794 MiB)
+  0.413546 seconds (456.06 k allocations: 18.861 MiB, 1.44% gc time)
 ```
 该结果是$f(x)=x \tan x-\sqrt{h^{2}-x^{2}}$在$x>0$条件下的零点，分析函数具体性质我们易知该函数为**偶函数**，所以**另一零点为所得零点的相反数**，所以最终求解结果为
 $$x_{0}=\pm0.45018361129449697$$
+同时对于$g(x)$而言，其根与h取值的分布图如下
+![h-roots](h-root_distribution.png)
+>Figure 1 根与h取值的关系
+
 ## Problem 2
 ### Code
 代码如下
@@ -79,7 +84,7 @@ $$r=3.260\times10^{8}m$$
 ```
 输出图像为
 ![Ploynomial](Problem_3/result.png)
->Figure 1 Ploynomial
+>Figure 2 Ploynomial
 
 由此图我们可以看出所求六零点分别所在的大概区间，为我们Part B中进行迭代求根提供了方便
 ### Part B

@@ -85,6 +85,8 @@ end
   
 代码如下
 ```julia
+using Plots;gr()
+  
 include("Brent.jl")
   
 function main()
@@ -98,16 +100,38 @@ function main()
 end
   
 @time main()
+  
+function Plot()
+    tolerance::Float64=10^(-8)
+    maxIndex::UInt32=500
+    H=Array{Float64}(LinRange(0.5,10,1000))
+    result=zeros(Float64,1000)
+  
+    for i=1:1000
+        g(x::Float64)=x*cot(x)+sqrt(H[i]^2-x^2)
+        result[i]=Find(g,H[i],tolerance,maxIndex)
+    end
+  
+    plot(H,result,seriestype=:scatter,title="h-root distribution",label="roots")
+    png(joinpath(@__DIR__,"h-root_distribution.png"))
+end
+  
+@time Plot()
 ```  
 ### 结果及分析
   
 程序运行结果如下（其中计时部分已经多次计时刨除编译所需时间）
 ```
-  0.065786 seconds (180.31 k allocations: 9.475 MiB, 6.62% gc time)
 0.45018361129449697
+  0.090180 seconds (229.23 k allocations: 11.794 MiB)
+  0.413546 seconds (456.06 k allocations: 18.861 MiB, 1.44% gc time)
 ```
 该结果是<img src="https://latex.codecogs.com/gif.latex?f(x)=x%20&#x5C;tan%20x-&#x5C;sqrt{h^{2}-x^{2}}"/>在<img src="https://latex.codecogs.com/gif.latex?x&gt;0"/>条件下的零点，分析函数具体性质我们易知该函数为**偶函数**，所以**另一零点为所得零点的相反数**，所以最终求解结果为
 <p align="center"><img src="https://latex.codecogs.com/gif.latex?x_{0}=&#x5C;pm0.45018361129449697"/></p>  
+  
+同时对于<img src="https://latex.codecogs.com/gif.latex?g(x)"/>而言，其根与h取值的分布图如下
+![h-roots](h-root_distribution.png )
+>Figure 1 根与h取值的关系
   
 ## Problem 2
   
@@ -186,7 +210,7 @@ end
 ```
 输出图像为
 ![Ploynomial](Problem_3/result.png )
->Figure 1 Ploynomial
+>Figure 2 Ploynomial
   
 由此图我们可以看出所求六零点分别所在的大概区间，为我们Part B中进行迭代求根提供了方便
 ### Part B

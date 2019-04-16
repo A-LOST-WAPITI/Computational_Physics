@@ -9,7 +9,8 @@ function main()
 
     f(x::Float64)=x*tan(x)-sqrt(h^2-x^2)
 
-    Find(f,h,tolerance,maxIndex)
+    root=Find(f,h,tolerance,maxIndex)
+    println("$root")
 end
 
 @time main()
