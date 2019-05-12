@@ -1,43 +1,44 @@
 using Debugger
+function bisec(f, a, b) 
+	# 定义需要的参数
+	fa = f(a)
+	fb = f(b)
+    fmid = 0
+    tol = 10^(-7)
 
-f(x::Float32)=4cos(x)-exp(x)
-df(x::Float32)=-4sin(x)-exp(x)
-function Limit(index::UInt32)
-    lower::Float32=0
-    upper::Float32=0
-    index%2==0 && (lower=pi*(-1/2-(index-2));true) || (lower=pi*(-(index-1));true)
-    index%2==0 && (upper=pi*(-(index-2));true) || (upper=pi*(1/2-(index-1));true)
-    return lower,upper
+	if(fa * fb < 0) # ａｂ中有一根则必异号
+		for j = 1:100000000
+			# 计算中值c
+			mid = (a + b) / 2 
+			fmid = f(mid)
+			# 中值为零或已保证在精度内的情况
+			if (fmid == 0) || ((b - a) / 2 < tol)
+				return mid
+			end
+			# 中值与ａ值同号的情况
+			if fmid * fa > 0
+				a = mid
+				fa = fmid
+			else
+				b = mid
+			end
+		end
+	end
 end
-function NB(lower::Float32,upper::Float32,maxIndex::UInt16,tolerance::Float32)
-    count::UInt16=0
-    now::Float32=(lower+upper)/2
-    while count<maxIndex && abs(f(now))>tolerance
-        while now<lower || now>upper
-            now<lower && (now=(now+upper)/2;true)
-            now>upper && (now=(now+lower)/2;true)
-        end
-        now=now-f(now)/df(now)
-        count+=1
-    end
-    return now
+function function1(x)
+    4cos(x)-exp(x)
 end
 function main()
-    x=Array{UInt32}([i for i=1:100])
-    lowers=similar(x,Float32)
-    uppers=similar(x,Float32)
-    results=similar(x,Float32)
-    tolerance::Float32=10^(-8)
-    maxIndex::UInt16=50
-
-    Threads.@threads for i=1:length(x)
-        index::UInt32=i
-        (lowers[index],uppers[index])=Limit(index)
+	println("0")
+	root=bisec(function1, -pi, -0.000000001)
+	println("$root")
+	for i = -1:100 # -100pi到-pi根的情况
+		x=sort([-i*pi,-(i-1)*pi])
+		root = bisec(function1,x[1],x[2])
+		println("$root")
     end
-    show(lowers)
-    show(uppers)
-
-    results.=NB.(lowers,uppers,maxIndex,tolerance)
 end
 
-f.(main())
+@enter main()
+# 我不知道为什么我的　println　不能用，用就报错，连自动补齐都没有println ,查了一下也没有这种情况，你们在你们电脑上试试把show换成println．
+# 数据我对比了python 和　mathematica 的解，都没问题了．

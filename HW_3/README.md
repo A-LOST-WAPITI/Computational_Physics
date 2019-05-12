@@ -166,7 +166,7 @@ $$x=\frac{2}{b+r}$$
 #include "quadmath.h"
 #include "math.h"
 
-int cof[10]={-1,9,-36,84,-126,126,-84,36,-9,1};
+const int cof[10]={-1,9,-36,84,-126,126,-84,36,-9,1};
 
 float f_compute(int choice,float x) {
     float result=0;
@@ -174,8 +174,8 @@ float f_compute(int choice,float x) {
         result+=powf(x-1,9);
     }
     else {
-        for(size_t i=0;i<9;i++) {
-            result+=cof[i]*powf(x-1,i);
+        for(size_t i=0;i<10;i++) {
+            result+=cof[i]*powf(x,i);
         }
     }
     return result;
@@ -186,8 +186,8 @@ double d_compute(int choice,double x) {
         result+=pow(x-1,9);
     }
     else {
-        for(size_t i=0;i<9;i++) {
-            result+=cof[i]*pow(x-1,i);
+        for(size_t i=0;i<10;i++) {
+            result+=cof[i]*pow(x,i);
         }
     }
     return result;
@@ -198,8 +198,8 @@ __float128 q_compute(int choice,__float128 x) {
         result+=powq(x-1,9);
     }
     else {
-        for(size_t i=0;i<9;i++) {
-            result+=cof[i]*powq(x-1,i);
+        for(size_t i=0;i<10;i++) {
+            result+=cof[i]*powq(x,i);
         }
     }
     return result;
@@ -251,34 +251,33 @@ d_raw=numArray[:,3]
 d_exp=numArray[:,4]
 q_raw=numArray[:,5]
 q_exp=numArray[:,6]
-f_re_err=(f_raw-q_exp)/q_exp
-d_re_err=(d_raw-q_exp)/q_exp
-q_re_err=(q_raw-q_exp)/q_exp
+f_re_err=f_exp-f_raw
+d_re_err=d_exp-d_raw
+q_re_err=q_exp-q_raw
 plt.close('all')
 plt.figure()
 plt.subplot(221)
 plt.title("float condition")
 plt.plot(X,f_raw,"-",label="raw")
-plt.plot(X,f_exp,"-",label="expansion")
+plt.plot(X,f_exp,".",label="expansion",ms=1.5)
 plt.legend()
 plt.subplot(222)
 plt.title("double condition")
 plt.plot(X,d_raw,"-",label="raw")
-plt.plot(X,d_exp,"-",label="expansion")
+plt.plot(X,d_exp,".",label="expansion",ms=1.5)
 plt.legend()
 plt.subplot(223)
 plt.title("quadmath condition")
 plt.plot(X,q_raw,"-",label="raw")
-plt.plot(X,q_exp,"-",label="expansion")
+plt.plot(X,q_exp,".",label="expansion",ms=1.5)
 plt.legend()
 plt.subplot(224)
 plt.title("relative error")
-plt.plot(X,f_re_err,"-",label="float condition")
-plt.plot(X,d_re_err,"-",label="double condition")
+plt.plot(X,f_re_err,".",label="float condition",ms=1.5)
+plt.plot(X,d_re_err,".",label="double condition",ms=1.5)
 plt.plot(X,q_re_err,"-",label="quadmath condition")
 plt.legend()
 plt.show()
-
 ```
 </details>
 

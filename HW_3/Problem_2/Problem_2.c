@@ -2,7 +2,7 @@
 #include "quadmath.h"
 #include "math.h"
 
-int cof[10]={-1,9,-36,84,-126,126,-84,36,-9,1};
+const int cof[10]={-1,9,-36,84,-126,126,-84,36,-9,1};
 
 float f_compute(int choice,float x) {
     float result=0;
@@ -11,7 +11,7 @@ float f_compute(int choice,float x) {
     }
     else {
         for(size_t i=0;i<10;i++) {
-            result+=cof[i]*powf(x-1,i);
+            result+=cof[i]*powf(x,i);
         }
     }
     return result;
@@ -23,7 +23,7 @@ double d_compute(int choice,double x) {
     }
     else {
         for(size_t i=0;i<10;i++) {
-            result+=cof[i]*pow(x-1,i);
+            result+=cof[i]*pow(x,i);
         }
     }
     return result;
@@ -35,7 +35,7 @@ __float128 q_compute(int choice,__float128 x) {
     }
     else {
         for(size_t i=0;i<10;i++) {
-            result+=cof[i]*powq(x-1,i);
+            result+=cof[i]*powq(x,i);
         }
     }
     return result;

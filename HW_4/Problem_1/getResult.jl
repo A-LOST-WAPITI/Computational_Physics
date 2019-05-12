@@ -10,9 +10,6 @@ function produce(N::UInt32,maxIndex::UInt8,CUDA::Bool,times::Bool)
         dots=CuArray(dots)
         result=CuArray(result)
     end
-    result.=Newton.(dots,maxIndex,times)
-    if typeof(result)!=Array
-        result=Array(result)
-    end
+    @time result.=Newton.(dots,maxIndex,times)
     return result
 end
