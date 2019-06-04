@@ -4,7 +4,7 @@ html:
     offline: true
     toc: true
 ---
-# 计算物理第五次作业
+# 计算物理第五次作业 {ignore=true}
 
 > 万国麟
 > 2017141221045
@@ -13,7 +13,7 @@ html:
 
 <!-- code_chunk_output -->
 
-- [计算物理第五次作业](#%E8%AE%A1%E7%AE%97%E7%89%A9%E7%90%86%E7%AC%AC%E4%BA%94%E6%AC%A1%E4%BD%9C%E4%B8%9A)
+- [计算物理第五次作业 {ignore=true}](#%E8%AE%A1%E7%AE%97%E7%89%A9%E7%90%86%E7%AC%AC%E4%BA%94%E6%AC%A1%E4%BD%9C%E4%B8%9A-ignoretrue)
 	- [Brent Method](#brent-method)
 		- [Code](#code)
 		- [作用分析](#%E4%BD%9C%E7%94%A8%E5%88%86%E6%9E%90)

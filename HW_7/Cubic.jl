@@ -6,10 +6,10 @@ end
     x=h=similar(d)
 
     for i=1:length(c)
-        i==1 && (c[i]=u[i]/d[i];true) || (c[i]=u[i]/(d[i]-l[i]*c[i-1]);true)
+        i==1 && (c[i]=u[i]/d[i];true) || (c[i]=u[i]/(d[i]-l[i-1]*c[i-1]);true)
     end
     for i=1:length(h)
-        i==1 && (h[i]=b[i]/d[i];true) || (h[i]=(b[i]-l[i]*h[i-1])/(d[i]-l[i]*c[i-1]);true)
+        i==1 && (h[i]=b[i]/d[i];true) || (h[i]=(b[i]-l[i-1]*h[i-1])/(d[i]-l[i-1]*c[i-1]);true)
     end
 
     x[length(x)]=h[length(h)]
@@ -21,14 +21,14 @@ end
 @inbounds function FuncArray(x::Array{Float64},y::Array{Float64},m::Array{Float64})
     len=length(x)
 
-    funcs=Array{Function,len}[]
+    funcs=Array{Function}[]
     for i=1:len-1
         step=Step(x,i)
 
         a=y[i]
         b=(y[i+1]-y[i])/step-m[i]*step/2-(m[i+1]-m[i])*step/6
         c=m[i]/2
-        d=(m[i+1]-m[i])/6step
+        d=(m[i+1]-m[i])/(6step)
 
         func(now)=a+b*(now-x[i])+c*(now-x[i])^2+d*(now-x[i])^3
         funcs=vcat(funcs,func)
@@ -37,17 +37,21 @@ end
 end
 @inbounds function Cubic(x::Array{Float64},y::Array{Float64},clamped::Bool=true)
     len::UInt8=length(x)
+    h=[x[i+1]-x[i] for i=1:len-1]
     
-    d=[4Step(x,i) for i=1:len-1]
-    d[1]-=2Step(x,1)
-    d=vcat(d,2Step(x,len))
-    u=l=[Step(x,i) for i=1:len]
-    !clamped && (d[1]=d[len]=1;u[1]=l[len-1]=0;true)
+    d=[2*(h[i-1]+h[i]) for i=2:len-1]
+    d=vcat(2h[1],d,2h[len-1])
+    u=l=h
+    if clamped
+        d[1]=d[len]=1
+        u[1]=l[len-1]=0
+    end
 
     m=similar(x)
     b=zeros(Float64,len)
     for i=2:len-1
-        b[i]=6*(y[i+1]+y[i-1]-2y[i])/Step(x,i)
+        b[i]=(y[i+1]-y[i])/Step(x,i)-(y[i]-y[i-1])/Step(x,i-1)
+        b[i]*=6
     end
 
     m=Thomas(u,d,l,b)

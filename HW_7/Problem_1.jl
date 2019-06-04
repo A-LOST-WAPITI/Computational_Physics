@@ -29,8 +29,8 @@ function main()
     end
 
     y=[y_l,y_np,y_cp]
-    labels=["Piecewise interpolation","Cubic(nutural)","Cubic(clamped)"]
-    plot(x,y)
+    labels=["Piecewise interpolation","Cubic(natural)","Cubic(clamped)"]
+    plot(x,y,label=labels)
     png(joinpath(@__DIR__,"Problem_1.png"))
 end
 
