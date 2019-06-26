@@ -1,23 +1,41 @@
 function Trapezoid(func,lower,upper)
+    a=func(lower)
+    b=func(upper)
     h=upper-lower
-    temp=h*(func(lower)+func(upper))/2
+    temp=h*(a+b)/2
     return temp
 end
 function Simpson(func,lower,upper)
-    mid=(upper+lower)/2
-    temp=(upper-lower)*(func(lower)+4func(mid)+func(upper))/6
+    mid=(lower+upper)/2
+    h=upper-lower
+    a=func(lower)
+    b=func(mid)
+    c=func(upper)
+    temp=h*(a+4b+c)/6
     return temp
 end
-function Re(func,lower,upper,eps,now,Trap)
-    global count,epsRaw
-    mid=(upper+lower)/2
-    Trap && (tempL=Trapezoid(func,lower,mid);true) || (tempL=Simpson(func,lower,mid);true)
-    Trap && (tempR=Trapezoid(func,mid,upper);true) || (tempR=Simpson(func,mid,upper);true)
-    epsN=eps/2
-    abs(tempL+tempR-now)<eps && (count==0 && (count=UInt(epsRaw/eps);true);return now;true) || (return Re(func,lower,mid,epsN,tempL,Trap)+Re(func,mid,upper,epsN,tempR,Trap);true)
-end
-function Adaptive(func,lower,upper,eps,Trap)
-    Trap && (raw=Trapezoid(func,lower,upper);true) || (raw=Simpson(func,lower,upper);true)
-    result=Re(func,lower,upper,eps,raw,Trap)
-    return result
+function Adaptive(func,lower,upper,trap,tolerance)
+    trap && (now=Trapezoid(func,lower,upper);true) || (now=Simpson(func,lower,upper);true)
+    count=1
+    temp=0
+    while true
+        count*=2
+        nodes=Array(LinRange(lower,upper,count+1))
+        temp=0
+        if trap
+            for i=1:count
+                temp+=Trapezoid(func,nodes[i],nodes[i+1])
+            end
+        else
+            for i=1:count
+                temp+=Simpson(func,nodes[i],nodes[i+1])
+            end
+        end
+        if abs(temp-now)<tolerance
+            break
+        else
+            now=temp
+        end
+    end
+    return temp,count
 end

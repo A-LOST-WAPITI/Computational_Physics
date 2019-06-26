@@ -1,14 +1,9 @@
-f(x)=sin(sqrt(100x))^2
+include("Adaptive.jl")
 
-include("./Adaptive.jl")
+f(x)=sin(10sqrt(x))^2
 
-function main(eps)
-    global epsRaw=eps
-    global count=0
-    print("Trapezoid: ",Adaptive(f,0,1,eps,true),"\n")
-    print("Slice count: ",count,"\n")
-    count=0
-    print("Simpson:   ",Adaptive(f,0,1,eps,false),"\n")
-    print("Slice count: ",count,"\n")
-end
-main(10e-10)
+trap=Adaptive(f,0,1,true,10^(-10))
+sim=Adaptive(f,0,1,false,10^(-10))
+
+print("The result of trapzoid method is ",trap[1],", and the number of slices is ",trap[2],"\n")
+print("The result of simpson method is ",sim[1],", and the number of slices is ",sim[2])

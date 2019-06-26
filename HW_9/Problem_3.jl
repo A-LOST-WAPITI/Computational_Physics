@@ -29,7 +29,7 @@ function Re(i,j,rawList)
     end
 end
 function Romberg(func,lower,upper,tolerance)
-    global count
+    count=0
     i=j=2
     rawList=[func,lower,upper]
     result=0
@@ -39,37 +39,29 @@ function Romberg(func,lower,upper,tolerance)
         temp3=Re(i-1,j-1,rawList)
         if abs(temp1-temp2)<tolerance && abs(temp1-temp3)<tolerance
             result=temp1
-            count=i
+            count=2^i
             break
         end
         i+=1
         j+=1
     end
-    return result
+    return result,count
 end
 function main()
-    global epsRaw=0
-    global count=0
     errs=zeros(12,3)
     counts=zeros(12,3)
     law=π/4
     for i=1:12
         eps=10.0^(-i)
-        epsRaw=eps
         
-        errs[i,1]=abs(Adaptive(f,0,1,eps,true)-law)
-        counts[i,1]=count
-        count=0
-        errs[i,2]=abs(Adaptive(f,0,1,eps,false)-law)
-        counts[i,2]=count
-        count=0
-        errs[i,3]=abs(Romberg(f,0,1,eps)-law)
-        counts[i,3]=count
-        count=0
+        errs[i,1],counts[i,1]=Adaptive(f,0,1,true,eps)
+        errs[i,2],counts[i,2]=Adaptive(f,0,1,false,eps)
+        errs[i,3],counts[i,3]=Romberg(f,0,1,eps)
     end
+    errs.=abs.(errs.-law)
     hs=1.0./counts
     labels=["Trapezoid","Simpson","Romberg"]
-    scatter(hs,errs,xlabel="Slice step",ylabel="Absolute error",xaxis=:log,yaxis=:log,label=labels,legend=:topleft)
+    scatter(hs,errs,xlabel="Slice step",ylabel="Absolute error",xflip=true,xaxis=:log,yaxis=:log,label=labels)
     png(joinpath(@__DIR__,"Problem_3.png"))
     for i=1:3
         print(labels[i],"\n","  The power of slice step(h) is: ",round(power_fit(hs[:,i],errs[:,i])[2],digits=3),"\n")
