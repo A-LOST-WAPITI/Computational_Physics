@@ -1,4 +1,5 @@
-using Plots
+using Plots;gr()
+using CurveFit
 
 include("Euler.jl")
 
@@ -22,10 +23,11 @@ function main()
     for i=1:5
         errE[i],errEI[i]=err(i)
     end
-    errE=round.(errE,digits=5)
-    errEI=round.(errEI,digits=5)
-    plot([10.0^(-i) for i=1:5],errE,label="euler method",xscale=:log10,yscale=:log10,xlabel="step",yticks=[10.0^(i/10) for i=-20:0],ylabel="relative error")
-    plot!([10.0^(-i) for i=1:5],errEI,label="improved euler method")
+    steps=[10.0^(-i) for i=1:5]
+    plot(steps,errE,label="euler method",xscale=:log10,yscale=:log10,xlabel="step",yticks=[10.0^(i/10) for i=-20:0],ylabel="relative error")
+    plot!(steps,errEI,label="improved euler method")
+    print("The power of Euler Method is ",power_fit(steps,errE)[2],"\n")
+    print("The power of Improved Euler Method is ",power_fit(steps,errEI)[2],"\n")
     png(joinpath(@__DIR__,"Problem_1.png"))
 end
 main()
