@@ -1,0 +1,1 @@
+/home/wapiti/on-the-fly/Computational_Physics/HW_4/Problem_1/getResult.jl

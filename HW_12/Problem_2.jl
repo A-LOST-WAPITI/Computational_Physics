@@ -29,9 +29,10 @@ function run(rawDeg,rawOmega)
         omegaPoints=vcat(omegaPoints,r[2])
         r=RK4(func,r,time,step)
     end
-    plot(t,thetaPoints,label=L"\theta-t",xlabel="t",ylabel=L"\theta or \omega")
-    plot!(t,omegaPoints,label=L"\omega-t")
-    png(joinpath(@__DIR__,"Problem_2_$rawDeg.png"))
+    plot(t,thetaPoints,label=L"\theta-t",xlabel="t",ylabel=L"\theta",lims=:round,xticks=0:0.1:1)
+    png(joinpath(@__DIR__,"Problem_2_position_$rawDeg.png"))
+    plot(thetaPoints,omegaPoints,label=L"\omega - \theta",xlabel=L"\theta",ylabel=L"\omega",lims=:round)
+    png(joinpath(@__DIR__,"Problem_2_phase_$rawDeg.png"))
 end
 function main()
     run(10,0)

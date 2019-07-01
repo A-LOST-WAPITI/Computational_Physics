@@ -1,3 +1,9 @@
+---
+html:
+    embed_local_images: true
+    offline: true
+    toc: true
+---
 # 计算物理第九次作业
 >万国麟
 >2017141221045
